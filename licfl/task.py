@@ -139,25 +139,11 @@ def load_data(partition_id: int, num_partitions: int):
     global data_cache, region_cols_list, region_scalers
 
     if data_cache is None:
-        # Locate the Feather file, with env override
-        pkg_data  = Path(__file__).parent / "data" / "ercot-2021-load_profiles.feather"
-        proj_data = Path.cwd() / "data" / "ercot-2021-load_profiles.feather"
-        root_file = Path(__file__).parent.parent / "ercot-2021-load_profiles.feather"
-
-        env_path = os.getenv("ERCOT_DATA_PATH")
-        candidates = [Path(env_path)] if env_path else [pkg_data, proj_data, root_file]
-
-        data_path = None
-        for cand in candidates:
-            if cand and cand.exists():
-                data_path = cand
-                break
-        if data_path is None:
-            raise FileNotFoundError(
-                "Could not find 'ercot-2021-load_profiles.feather' in any of: "
-                + ", ".join(str(c) for c in candidates)
-            )
-
+        
+        # Locate the Feather file
+        data = Path(__file__).parent / "data" / "ercot-2021-load_profiles.feather"
+        data_path = data
+        
         # Read into DataFrame
         try:
             df = pd.read_feather(data_path)
